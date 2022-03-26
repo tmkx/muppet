@@ -6,8 +6,11 @@ import Cocoa
 public struct Mouse {
     /// Get mouse position
     public static func getPosition() -> CGPoint {
-        let location = NSEvent.mouseLocation
-        return CGPoint(x: location.x, y: location.y)
+        if let location = CGEvent(source: nil)?.location {
+            return location
+        } else {
+            return CGPoint.zero
+        }
     }
 
     /// Move mouse
