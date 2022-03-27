@@ -101,4 +101,25 @@ extension AXUIElement {
         }
         return (value as! [AXUIElement])
     }
+
+    /// Traverse the children of element.
+    ///
+    /// - Parameter handler: Return ture if the element matches acquirement
+    /// - Returns: Matched element
+    public func traverse(_ handler: (_ element: AXUIElement) -> Bool) -> AXUIElement? {
+        guard let children = children() else {
+            return nil
+        }
+        for child in children {
+            if handler(child) {
+                return child
+            }
+        }
+        for child in children {
+            if let hit = child.traverse(handler) {
+                return hit
+            }
+        }
+        return nil
+    }
 }
