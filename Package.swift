@@ -16,6 +16,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/vapor/vapor.git", revision: "5861bf9e2cff2c4cb0dcfb0c15ecfaa8bc5630e0"), // 4.55.3
+        .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -23,7 +24,11 @@ let package = Package(
         .target(name: "Muppet", dependencies: []),
         .executableTarget(
             name: "MuppetServer",
-            dependencies: ["Muppet", .product(name: "Vapor", package: "vapor")],
+            dependencies: [
+                "Muppet",
+                "SwiftyJSON",
+                .product(name: "Vapor", package: "vapor"),
+            ],
             swiftSettings: [.unsafeFlags(["-cross-module-optimization"], .when(configuration: .release))]
         ),
     ]

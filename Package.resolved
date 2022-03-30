@@ -128,10 +128,19 @@
         }
       },
       {
+        "package": "SwiftyJSON",
+        "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON.git",
+        "state": {
+          "branch": null,
+          "revision": "b3dcd7dbd0d488e1a7077cb33b00f2083e382f07",
+          "version": "5.0.1"
+        }
+      },
+      {
         "package": "vapor",
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
-          "branch": "5861bf9",
+          "branch": null,
           "revision": "5861bf9e2cff2c4cb0dcfb0c15ecfaa8bc5630e0",
           "version": null
         }
