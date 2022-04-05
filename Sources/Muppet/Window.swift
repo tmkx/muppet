@@ -55,6 +55,17 @@ public struct Window {
         return appWindows.map({ WindowInfo(info: $0) })
     }
 
+    /// Get window detail
+    public static func detail(of windowId: CGWindowID) -> WindowInfo? {
+        let windowInfoList = CGWindowListCopyWindowInfo(.optionIncludingWindow, windowId)! as NSArray
+
+        for info in windowInfoList {
+            return WindowInfo(info: info as! NSDictionary)
+        }
+
+        return nil
+    }
+
     /// Take window screenshot
     public static func screenshot(with windowId: CGWindowID, options: CGWindowImageOption = [.boundsIgnoreFraming, .nominalResolution]) -> CGImage? {
         CGWindowListCreateImage(.null, .optionIncludingWindow, windowId, options)
