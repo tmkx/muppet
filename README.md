@@ -2,7 +2,7 @@
 
 ## Muppet
 
-Library
+Core library
 
 ## MuppetServer
 

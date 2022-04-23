@@ -31,16 +31,23 @@ public struct Mouse {
         }
     }
 
+    public static func down(at point: CGPoint, using button: CGMouseButton = .left) {
+        let (mouseDownType, _, _) = getButtonType(button)
+        let eventDown = CGEvent(mouseEventSource: nil, mouseType: mouseDownType, mouseCursorPosition: point, mouseButton: button)
+        eventDown?.post(tap: .cghidEventTap)
+    }
+
+    public static func up(at point: CGPoint, using button: CGMouseButton = .left) {
+        let (_, mouseUpType, _) = getButtonType(button)
+        let eventUp = CGEvent(mouseEventSource: nil, mouseType: mouseUpType, mouseCursorPosition: point, mouseButton: button)
+        eventUp?.post(tap: .cghidEventTap)
+    }
+
     /// Click
     public static func click(at point: CGPoint, using button: CGMouseButton = .left) {
-        let (mouseDownType, mouseUpType, _) = getButtonType(button)
-
-        let eventDown = CGEvent(mouseEventSource: nil, mouseType: mouseDownType, mouseCursorPosition: point, mouseButton: button)
-        let eventUp = CGEvent(mouseEventSource: nil, mouseType: mouseUpType, mouseCursorPosition: point, mouseButton: button)
-
-        eventDown?.post(tap: .cghidEventTap)
+        down(at: point, using: button)
         usleep(10_000)
-        eventUp?.post(tap: .cghidEventTap)
+        up(at: point, using: button)
     }
 
     /// Double Click

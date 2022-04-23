@@ -29,8 +29,9 @@ struct CDPController: RouteCollection {
             }
             let domain = message[0]
             let method = message[1]
-            print(domain, method)
-            if domain == "Page" {
+
+            switch domain {
+            case "Page":
                 if method == "startScreencast" {
                     screencastTask?.cancel()
                     screencastTask = CDPPage.startScreencast(socket, windowId: windowId)
@@ -38,6 +39,13 @@ struct CDPController: RouteCollection {
                     screencastTask?.cancel()
                     screencastTask = nil
                 }
+            case "Input":
+                if method == "emulateTouchFromMouseEvent" {
+                    CDPInput.emulateTouchFromMouseEvent(to: windowId, with: .init(params: request["params"]))
+                }
+                break
+            default:
+                break
             }
 
             let jsonData = ["id": id, "result": [:], ] as [String: Any]
