@@ -46,11 +46,26 @@ struct CDPController: RouteCollection {
                     CDPInput.emulateTouchFromMouseEvent(to: windowId, with: .init(params: request["params"]))
                 }
                 break
+            case "DOM":
+                if method == "getDocument" {
+                    do {
+                        if var document = try CDPDom.getDocument(of: windowId) {
+                            document["root"]["nodeId"] = 1
+                            let jsonData = ["id": id, "result": document] as [String: Any]
+                            if let jsonText = JSON(jsonData).rawString(.utf8, options: .init(rawValue: 0)) {
+                                socket.send(jsonText)
+                                return
+                            }
+                        }
+                    } catch {
+                    }
+                }
+                break
             default:
                 break
             }
 
-            let jsonData = ["id": id, "result": [:], ] as [String: Any]
+            let jsonData = ["id": id, "error": ["code": -32601, "message": "method wasn't found"], ] as [String: Any]
             if let jsonText = JSON(jsonData).rawString(.utf8, options: .init(rawValue: 0)) {
                 socket.send(jsonText)
             }
