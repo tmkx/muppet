@@ -20,7 +20,9 @@ struct CDPController: RouteCollection {
         }
 
         ws.onText { (socket: WebSocket, text: String) -> () in
-            NSLog(text)
+            if (!text.contains("Page.screencastFrameAck")) {
+                NSLog(text)
+            }
             let request = try! JSON(data: text.data(using: .utf8)!)
             let id = request["id"].intValue
             let message = request["method"].stringValue.split(separator: ".")

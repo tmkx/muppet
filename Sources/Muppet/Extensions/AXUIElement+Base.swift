@@ -89,8 +89,7 @@ extension AXUIElement {
     /// Returns the accessibility object at the specified position in top-left relative screen coordinates.
     public func getElement(at position: CGPoint) -> AXUIElement? {
         var element: AXUIElement? = nil
-        let axError = AXUIElementCopyElementAtPosition(self, Float(position.x), Float(position.y), &element)
-        print(axError.rawValue)
+        AXUIElementCopyElementAtPosition(self, Float(position.x), Float(position.y), &element)
         return element
     }
 

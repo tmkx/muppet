@@ -44,10 +44,7 @@ struct AppController: RouteCollection {
     }
 
     func getByIdentifier(_ req: Request) throws -> [AppInfo] {
-        if let identifier = req.parameters.get("identifier") {
-            return Muppet.Application.getApps(bundleIdentifier: identifier).map({ AppInfo($0) })
-        } else {
-            return []
-        }
+        let identifier = req.parameters.get("identifier")!
+        return Muppet.Application.getApps(bundleIdentifier: identifier).map({ AppInfo($0) })
     }
 }
