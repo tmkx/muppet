@@ -1,3 +1,4 @@
+import Cocoa
 import Vapor
 import Muppet
 import NIO

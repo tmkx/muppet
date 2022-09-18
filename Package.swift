@@ -15,7 +15,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/vapor/vapor.git", revision: "5861bf9e2cff2c4cb0dcfb0c15ecfaa8bc5630e0"), // 4.55.3
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.67.1"),
         .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.0"),
     ],
     targets: [
