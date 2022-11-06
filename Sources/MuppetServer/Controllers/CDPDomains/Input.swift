@@ -26,18 +26,22 @@ public struct MouseEvent {
 
 public struct CDPInput {
     public static func emulateTouchFromMouseEvent(to windowId: CGWindowID, with event: MouseEvent) {
-        let window = Muppet.Window.detail(of: windowId)
-        let point = window?.frame?.origin.applying(CGAffineTransform(translationX: CGFloat(event.x!), y: CGFloat(event.y!)))
+        guard
+                let window = Muppet.Window.detail(of: windowId),
+                let ownerPid = window.ownerPid,
+                let point = window.frame?.origin.applying(CGAffineTransform(translationX: CGFloat(event.x!), y: CGFloat(event.y!)))
+        else { return }
 
         switch event.type {
         case .mousePressed, .mouseReleased:
-            if let point = point, let ownerPid = window?.ownerPid {
-                Muppet.Application.getApp(pid: ownerPid)?.activate(options: .activateIgnoringOtherApps)
-                if event.type == .mousePressed {
-                    Muppet.Mouse.down(at: point, using: .left)
-                } else if event.type == .mouseReleased {
-                    Muppet.Mouse.up(at: point, using: .left)
-                }
+            guard let application = Muppet.Application.getApp(pid: ownerPid) else { return }
+            if !application.isActive {
+                application.activate(options: .activateIgnoringOtherApps)
+            }
+            if event.type == .mousePressed {
+                Muppet.Mouse.down(at: point, using: event.button?.cgButton ?? .left)
+            } else if event.type == .mouseReleased {
+                Muppet.Mouse.up(at: point, using: event.button?.cgButton ?? .left)
             }
             break
         default:
@@ -50,6 +54,17 @@ public enum MouseEventButton: String {
     case left = "left"
     case right = "right"
     case none = "none"
+
+    var cgButton: CGMouseButton {
+        switch self {
+        case .left:
+            return .left
+        case .right:
+            return .right
+        case .none:
+            return .center
+        }
+    }
 }
 
 public enum MouseEventType: String {

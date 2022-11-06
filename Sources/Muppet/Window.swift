@@ -32,31 +32,19 @@ public struct WindowInfo {
 public struct Window {
     /// Get window list
     public static func list(pid: pid_t? = nil) -> [WindowInfo] {
-        guard let windowInfo = CGWindowListCopyWindowInfo(.optionAll, kCGNullWindowID) else {
-            return []
-        }
+        guard let windowInfo = CGWindowListCopyWindowInfo(.optionAll, kCGNullWindowID) else { return [] }
 
         return NSArray(object: windowInfo)
-                .compactMap {
-                    $0 as? NSArray
-                }
+                .compactMap { $0 as? NSArray }
                 .reduce([], +)
-                .compactMap {
-                    $0 as? NSDictionary
-                }
-                .filter { dict -> Bool in
-                    pid == nil || (dict[kCGWindowOwnerPID] as! NSNumber).intValue == pid!
-                }
-                .map {
-                    WindowInfo(info: $0)
-                }
+                .compactMap { $0 as? NSDictionary }
+                .filter { dict -> Bool in pid == nil || (dict[kCGWindowOwnerPID] as! NSNumber).intValue == pid! }
+                .map { WindowInfo(info: $0) }
     }
 
     /// Get window detail
     public static func detail(of windowId: CGWindowID) -> WindowInfo? {
-        guard let windowInfoList = CGWindowListCopyWindowInfo(.optionIncludingWindow, windowId) as NSArray?, windowInfoList.count > 0 else {
-            return nil
-        }
+        guard let windowInfoList = CGWindowListCopyWindowInfo(.optionIncludingWindow, windowId) as NSArray?, windowInfoList.count > 0 else { return nil }
         return WindowInfo(info: windowInfoList.firstObject as! NSDictionary)
     }
 
