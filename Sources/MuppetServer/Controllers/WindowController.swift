@@ -40,7 +40,10 @@ struct WindowController: RouteCollection {
 
     func list(_ req: Request) throws -> [SerializableWindowInfo] {
         let pid = try? req.query.get(Int32.self, at: "pid")
-        return Muppet.Window.list(pid: pid).map(({ SerializableWindowInfo(origin: $0) }))
+        let isOnScreen = try? req.query.get(Bool.self, at: "isOnScreen")
+        return Muppet.Window.list(pid: pid)
+                .filter { isOnScreen == true ? $0.isOnScreen == true : true }
+                .map(({ SerializableWindowInfo(origin: $0) }))
     }
 
     func detail(_ req: Request) throws -> SerializableWindowInfo {

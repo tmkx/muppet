@@ -27,6 +27,8 @@ http://localhost:8080/windows
 
 http://localhost:8080/windows?pid=123
 
+http://localhost:8080/windows?pid=123&isOnScreen=true
+
 #### Get window detail
 
 http://localhost:8080/windows/:windowId
