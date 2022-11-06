@@ -3,11 +3,9 @@ import SwiftyJSON
 import Muppet
 
 public struct MouseEvent {
-    // "left" | "right" | "none"
-    public let button: String?
+    public let button: MouseEventButton?
     public let clickCount: UInt?
-    // "mousePressed" | "mouseReleased" | "mouseMoved" | "mouseWheel"
-    public let type: String?
+    public let type: MouseEventType?
     public let modifiers: UInt?
     public let x: Int?
     public let y: Int?
@@ -15,9 +13,9 @@ public struct MouseEvent {
     public let deltaY: Double?
 
     init(params: JSON) {
-        button = params["button"].string
+        button = MouseEventButton(rawValue: params["button"].string!)
         clickCount = params["clickCount"].uInt
-        type = params["type"].string
+        type = MouseEventType(rawValue: params["type"].string!)
         modifiers = params["modifiers"].uInt
         x = params["x"].int
         y = params["y"].int
@@ -32,12 +30,12 @@ public struct CDPInput {
         let point = window?.frame?.origin.applying(CGAffineTransform(translationX: CGFloat(event.x!), y: CGFloat(event.y!)))
 
         switch event.type {
-        case "mousePressed", "mouseReleased":
+        case .mousePressed, .mouseReleased:
             if let point = point, let ownerPid = window?.ownerPid {
-                Muppet.Application.getApps(pid: ownerPid)?.activate(options: .activateIgnoringOtherApps)
-                if event.type == "mousePressed" {
+                Muppet.Application.getApp(pid: ownerPid)?.activate(options: .activateIgnoringOtherApps)
+                if event.type == .mousePressed {
                     Muppet.Mouse.down(at: point, using: .left)
-                } else if event.type == "mouseReleased" {
+                } else if event.type == .mouseReleased {
                     Muppet.Mouse.up(at: point, using: .left)
                 }
             }
@@ -46,4 +44,17 @@ public struct CDPInput {
             break
         }
     }
+}
+
+public enum MouseEventButton: String {
+    case left = "left"
+    case right = "right"
+    case none = "none"
+}
+
+public enum MouseEventType: String {
+    case mousePressed = "mousePressed"
+    case mouseReleased = "mouseReleased"
+    case mouseMoved = "mouseMoved"
+    case mouseWheel = "mouseWheel"
 }

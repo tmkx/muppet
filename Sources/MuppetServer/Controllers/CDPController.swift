@@ -20,17 +20,18 @@ struct CDPController: RouteCollection {
         }
 
         ws.onText { (socket: WebSocket, text: String) -> () in
+            #if DEBUG
             if (!text.contains("Page.screencastFrameAck")) {
                 NSLog(text)
             }
+            #endif
             let request = try! JSON(data: text.data(using: .utf8)!)
             let id = request["id"].intValue
             let message = request["method"].stringValue.split(separator: ".")
             guard id > 0, message.count == 2 else {
                 return
             }
-            let domain = message[0]
-            let method = message[1]
+            let (domain, method) = (message[0], message[1])
 
             switch domain {
             case "Page":

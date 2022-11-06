@@ -31,6 +31,10 @@ http://localhost:8080/windows?pid=123
 
 http://localhost:8080/windows/:windowId
 
+#### Get window screenshot
+
+http://localhost:8080/windows/screenshot/:windowId
+
 ### CDP
 
 Chrome Devtools Protocol

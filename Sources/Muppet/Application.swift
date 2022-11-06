@@ -10,7 +10,7 @@ public struct Application {
         NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier)
     }
 
-    public static func getApps(pid: pid_t) -> NSRunningApplication? {
+    public static func getApp(pid: pid_t) -> NSRunningApplication? {
         NSRunningApplication(processIdentifier: pid)
     }
 }
