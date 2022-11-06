@@ -24,15 +24,7 @@ public struct WindowInfo {
         ownerPid = info[kCGWindowOwnerPID] as? pid_t
         sharingState = info[kCGWindowSharingState] as? UInt32
         storeType = info[kCGWindowStoreType] as? UInt32
-        if let bounds = info[kCGWindowBounds] as? NSDictionary {
-            let x = bounds["X"] as! Double;
-            let y = bounds["Y"] as! Double;
-            let width = bounds["Width"] as! Double;
-            let height = bounds["Height"] as! Double;
-            frame = CGRect(x: x, y: y, width: width, height: height)
-        } else {
-            frame = nil
-        }
+        frame = CGRect(dictionaryRepresentation: info[kCGWindowBounds] as! CFDictionary)
     }
 }
 
@@ -40,30 +32,32 @@ public struct WindowInfo {
 public struct Window {
     /// Get window list
     public static func list(pid: pid_t? = nil) -> [WindowInfo] {
-        let windowInfoList = CGWindowListCopyWindowInfo(.optionAll, kCGNullWindowID)! as NSArray
-
-        var appWindows = [NSDictionary]()
-        for _info in windowInfoList {
-            let info = _info as! NSDictionary
-            if pid == nil {
-                appWindows.append(info)
-            } else if (info[kCGWindowOwnerPID] as! NSNumber).intValue == pid! {
-                appWindows.append(info)
-            }
+        guard let windowInfo = CGWindowListCopyWindowInfo(.optionAll, kCGNullWindowID) else {
+            return []
         }
 
-        return appWindows.map({ WindowInfo(info: $0) })
+        return NSArray(object: windowInfo)
+                .compactMap {
+                    $0 as? NSArray
+                }
+                .reduce([], +)
+                .compactMap {
+                    $0 as? NSDictionary
+                }
+                .filter { dict -> Bool in
+                    pid == nil || (dict[kCGWindowOwnerPID] as! NSNumber).intValue == pid!
+                }
+                .map {
+                    WindowInfo(info: $0)
+                }
     }
 
     /// Get window detail
     public static func detail(of windowId: CGWindowID) -> WindowInfo? {
-        let windowInfoList = CGWindowListCopyWindowInfo(.optionIncludingWindow, windowId)! as NSArray
-
-        for info in windowInfoList {
-            return WindowInfo(info: info as! NSDictionary)
+        guard let windowInfoList = CGWindowListCopyWindowInfo(.optionIncludingWindow, windowId) as NSArray?, windowInfoList.count > 0 else {
+            return nil
         }
-
-        return nil
+        return WindowInfo(info: windowInfoList.firstObject as! NSDictionary)
     }
 
     /// Take window screenshot
