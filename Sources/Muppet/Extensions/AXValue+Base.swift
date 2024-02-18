@@ -6,15 +6,15 @@ extension AXValue {
     }
 
     public static func new(value: inout Any) -> AXValue? {
-        if value is CGPoint {
+        if var value = value as? CGPoint {
             return AXValueCreate(.cgPoint, &value)
-        } else if value is CGSize {
+        } else if var value = value as? CGSize {
             return AXValueCreate(.cgSize, &value)
-        } else if value is CGRect {
+        } else if var value = value as? CGRect {
             return AXValueCreate(.cgRect, &value)
-        } else if value is CFRange {
+        } else if var value = value as? CFRange {
             return AXValueCreate(.cfRange, &value)
-        } else if value is AXError {
+        } else if var value = value as? AXError {
             return AXValueCreate(.axError, &value)
         }
         return nil
