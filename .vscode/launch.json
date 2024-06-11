@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "sourceLanguages": [
+        "swift"
+      ],
+      "args": [],
+      "cwd": "${workspaceFolder:muppet}",
+      "name": "Debug MuppetServer",
+      "program": "${workspaceFolder:muppet}/.build/debug/MuppetServer",
+      "preLaunchTask": "swift: Build Debug MuppetServer"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "sourceLanguages": [
+        "swift"
+      ],
+      "args": [],
+      "cwd": "${workspaceFolder:muppet}",
+      "name": "Release MuppetServer",
+      "program": "${workspaceFolder:muppet}/.build/release/MuppetServer",
+      "preLaunchTask": "swift: Build Release MuppetServer"
+    }
+  ]
+}
