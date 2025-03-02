@@ -1,10 +1,7 @@
-import Vapor
 import SwiftyJSON
+import Vapor
 
-let app = try Application(.detect())
-defer {
-    app.shutdown()
-}
+let app = try await Application.make(.detect())
 
 try configure(app)
-try app.run()
+try await app.execute()
